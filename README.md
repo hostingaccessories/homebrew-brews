@@ -1,4 +1,4 @@
-# homebrew-brews-ha
+# Hosting Accessories Homebrew Formulae
 
 Homebrew tap for [Hosting Accessories](https://github.com/hostingaccessories) projects.
 
