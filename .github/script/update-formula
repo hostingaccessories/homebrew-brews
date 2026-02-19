@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+set -e
+
+: "${VERSION:?Must specify version}"
+: "${FORMULA:?Must specify formula}"
+
+FORMULA_FILE="Formula/$FORMULA.rb"
+
+# Check if formula file exists
+if [[ ! -f "$FORMULA_FILE" ]]; then
+  echo "Error: Formula file $FORMULA_FILE not found"
+  exit 1
+fi
+
+sed_inplace() {
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' "$@"
+  else
+    sed -i "$@"
+  fi
+}
+
+# Update version
+sed_inplace "s/version \".*\"/version \"${VERSION#v}\"/" "$FORMULA_FILE"
+
+# Find all url and sha256 line numbers
+url_line_nums=()
+while IFS=: read -r num _; do
+  url_line_nums+=("$num")
+done < <(grep -n '^\s*url ' "$FORMULA_FILE")
+
+sha_line_nums=()
+while IFS=: read -r num _; do
+  sha_line_nums+=("$num")
+done < <(grep -n '^\s*sha256 ' "$FORMULA_FILE")
+
+# Update each url/sha256 pair
+for i in "${!url_line_nums[@]}"; do
+  url_expr=$(sed -n "${url_line_nums[$i]}p" "$FORMULA_FILE" | sed 's/.*url *//')
+  URL=$(ruby -e "version='${VERSION#v}'; puts ${url_expr}")
+
+  echo "Fetching $URL"
+  SHASUM=$(curl -sL "$URL" | shasum -a 256 | awk '{ print $1 }')
+  echo "  sha256: $SHASUM"
+
+  sed_inplace "${sha_line_nums[$i]}s/sha256 \".*\"/sha256 \"${SHASUM}\"/" "$FORMULA_FILE"
+done

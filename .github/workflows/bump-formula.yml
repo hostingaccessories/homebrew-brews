@@ -1,0 +1,34 @@
+# gh workflow run bump-formula.yml \
+#   -f version=v0.1.0 \
+#   -f formula=ical-guy \
+#   -R hostingaccessories/homebrew-brews
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version'
+        required: true
+        type: string
+      formula:
+        description: 'Formula'
+        required: true
+        type: string
+
+jobs:
+  update-formula:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+      - name: Update formula
+        run: |
+          mkdir -p Formula
+
+          FORMULA='${{ github.event.inputs.formula }}' VERSION='${{ github.event.inputs.version }}' ./.github/script/update-formula
+
+          git config --global user.name 'Josh Priddle'
+          git config --global user.email 'jpriddle@me.com'
+          git add Formula/${{ github.event.inputs.formula }}.rb
+          git commit -m 'Updated ${{ github.event.inputs.formula }} to ${{ github.event.inputs.version }}'
+          git push origin master
