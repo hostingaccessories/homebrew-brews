@@ -1,5 +1,5 @@
 class BubbleBot < Formula
-  version "0.0.1"
+  version "0.0.2"
 
   desc "Ephemeral containers for AI agents"
   homepage "https://github.com/hostingaccessories/bubble-bot"
@@ -9,12 +9,12 @@ class BubbleBot < Formula
 
   on_arm do
     url "https://github.com/hostingaccessories/bubble-bot/releases/download/v#{version}/bubble-bot-aarch64-apple-darwin.tar.gz"
-    sha256 "b36f070db9858472fa67de0b1b5b173b7b67359f07e4e11e708d577637930a91"
+    sha256 "cf5bac462a32e505eab79f75eaaca069c32ea49e9c662eb142834bc122886256"
   end
 
   on_intel do
     url "https://github.com/hostingaccessories/bubble-bot/releases/download/v#{version}/bubble-bot-x86_64-apple-darwin.tar.gz"
-    sha256 "1699be2aec5cfba7a546113b29d2b99b133f4e773eb6cdcda44f7151a3573c47"
+    sha256 "368692a68133680514c36a3692c5e117f741df364e929d990b93b86bb2ddc084"
   end
 
   def install
