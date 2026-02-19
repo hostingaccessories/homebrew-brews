@@ -1,3 +1,5 @@
+name: Bump Homebrew Formula
+
 # gh workflow run bump-formula.yml \
 #   -f version=v0.1.0 \
 #   -f formula=ical-guy \
