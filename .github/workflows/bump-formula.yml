@@ -31,4 +31,4 @@ jobs:
           git config --global user.email 'jpriddle@me.com'
           git add Formula/${{ github.event.inputs.formula }}.rb
           git commit -m 'Updated ${{ github.event.inputs.formula }} to ${{ github.event.inputs.version }}'
-          git push origin master
+          git push origin main
